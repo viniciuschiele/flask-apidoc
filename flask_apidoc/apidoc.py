@@ -12,18 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import send_from_directory
+from os.path import join
 
 
 class ApiDoc(object):
     def __init__(self, folder_path=None, url_path=None, app=None):
-        self.folder_path = folder_path or 'apidoc'
-        self.url_path = url_path or '/apidoc'
+        self.folder_path = folder_path
+        self.url_path = url_path
+
+        if self.folder_path is None:
+            self.folder_path = 'apidoc'
+
+        if self.url_path is None:
+            self.url_path = '/apidoc'
+
+        self.app = None
 
         if app:
             self.init_app(app)
 
     def init_app(self, app):
+        self.app = app
         url = self.url_path
 
         if not self.url_path.endswith('/'):
@@ -36,7 +45,7 @@ class ApiDoc(object):
         if not path:
             path = 'index.html'
 
-        response = send_from_directory(self.folder_path, path)
+        response = self.app.send_static_file(join(self.folder_path, path))
 
         # TODO: replace url
         # if path == 'api_project.js' or path == 'api_project.json':
