@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from os.path import join
+import mimetypes
+
+from os.path import join, getsize, getmtime
+from werkzeug.datastructures import Headers
 
 
 class ApiDoc(object):
     def __init__(self, folder_path=None, url_path=None, app=None):
         self.folder_path = folder_path
         self.url_path = url_path
+        self.base_url_path = None
 
         if self.folder_path is None:
             self.folder_path = 'apidoc'
@@ -41,14 +45,50 @@ class ApiDoc(object):
         app.add_url_rule(url, 'apidoc', self.__apidoc_view)
         app.add_url_rule(url + '<path:path>', 'apidoc', self.__apidoc_view)
 
+        self.base_url_path = app.config.get('APIDOC_URL')
+
     def __apidoc_view(self, path=None):
         if not path:
             path = 'index.html'
 
-        response = self.app.send_static_file(join(self.folder_path, path))
+        file_name = join(self.folder_path, path)
 
-        # TODO: replace url
-        # if path == 'api_project.js' or path == 'api_project.json':
-        #     self.__replace_url(response)
+        if path == 'api_project.js' or path == 'api_project.json' and self.base_url_path:
+            return self.__send_static_file(file_name)
+
+        return self.app.send_static_file(file_name)
+
+    def __send_static_file(self, file_name):
+        file_name = join(self.app.static_folder, file_name)
+
+        with open(file_name, 'rt') as file:
+            data = file.read()
+
+        data = self.__replace_url(data)
+
+        headers = Headers()
+        headers['Content-Length'] = getsize(file_name)
+
+        response = self.app.response_class(data,
+                                           mimetype=mimetypes.guess_type(file_name)[0],
+                                           headers=headers,
+                                           direct_passthrough=True)
+
+        response.last_modified = int(getmtime(file_name))
 
         return response
+
+    def __replace_url(self, data):
+        i = data.find('"url"')
+
+        if i == -1:
+            return data
+
+        start = data.find('"', i + 5) + 1
+        end = data.find('"', start + 1)
+
+        content = data[:start]
+        content += self.base_url_path
+        content += data[end:]
+
+        return content
