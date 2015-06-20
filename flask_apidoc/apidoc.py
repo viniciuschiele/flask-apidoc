@@ -14,7 +14,10 @@
 
 import mimetypes
 
-from os.path import join, getsize, getmtime
+from flask import request
+from os.path import join
+from os.path import getmtime
+from os.path import getsize
 from werkzeug.datastructures import Headers
 
 
@@ -22,7 +25,6 @@ class ApiDoc(object):
     def __init__(self, folder_path=None, url_path=None, app=None):
         self.folder_path = folder_path
         self.url_path = url_path
-        self.base_url_path = None
 
         if self.folder_path is None:
             self.folder_path = 'apidoc'
@@ -45,15 +47,13 @@ class ApiDoc(object):
         app.add_url_rule(url, 'apidoc', self.__apidoc_view)
         app.add_url_rule(url + '<path:path>', 'apidoc', self.__apidoc_view)
 
-        self.base_url_path = app.config.get('APIDOC_URL')
-
     def __apidoc_view(self, path=None):
         if not path:
             path = 'index.html'
 
         file_name = join(self.folder_path, path)
 
-        if path == 'api_project.js' or path == 'api_project.json' and self.base_url_path:
+        if path == 'api_project.js' or path == 'api_project.json':
             return self.__send_static_file(file_name)
 
         return self.app.send_static_file(file_name)
@@ -78,7 +78,8 @@ class ApiDoc(object):
 
         return response
 
-    def __replace_url(self, data):
+    @staticmethod
+    def __replace_url(data):
         i = data.find('"url"')
 
         if i == -1:
@@ -88,7 +89,7 @@ class ApiDoc(object):
         end = data.find('"', start + 1)
 
         content = data[:start]
-        content += self.base_url_path
+        content += request.url_root
         content += data[end:]
 
         return content
