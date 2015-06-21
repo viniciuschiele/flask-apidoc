@@ -15,6 +15,7 @@
 import mimetypes
 
 from flask import request
+from functools import lru_cache
 from os.path import join
 from os.path import getmtime
 from os.path import getsize
@@ -44,21 +45,22 @@ class ApiDoc(object):
         if not self.url_path.endswith('/'):
             url += '/'
 
-        app.add_url_rule(url, 'apidoc', self.__apidoc_view)
-        app.add_url_rule(url + '<path:path>', 'apidoc', self.__apidoc_view)
+        app.add_url_rule(url, 'apidoc', self.__view)
+        app.add_url_rule(url + '<path:path>', 'apidoc', self.__view)
 
-    def __apidoc_view(self, path=None):
+    def __view(self, path=None):
         if not path:
             path = 'index.html'
 
         file_name = join(self.folder_path, path)
 
         if path == 'api_project.js' or path == 'api_project.json':
-            return self.__send_static_file(file_name)
+            return self.__send_project_file(file_name)
 
         return self.app.send_static_file(file_name)
 
-    def __send_static_file(self, file_name):
+    @lru_cache(maxsize=1048576)
+    def __send_project_file(self, file_name):
         file_name = join(self.app.static_folder, file_name)
 
         with open(file_name, 'rt') as file:
