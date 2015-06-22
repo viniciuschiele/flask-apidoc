@@ -81,7 +81,11 @@ class ApiDoc(object):
         self.__project_data.get('url').find('')
 
         data = self.__replace_api_url(data, self.__project_data.get('url'))
-        data = self.__replace_api_url(data, self.__project_data.get('sampleUrl'))
+
+        url = self.__project_data.get('sampleUrl')
+
+        if isinstance(url, str):
+            data = self.__replace_api_url(data, self.__project_data.get('sampleUrl'))
 
         headers = Headers()
         headers['Content-Length'] = getsize(file_name)
