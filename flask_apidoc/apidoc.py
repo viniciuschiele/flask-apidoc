@@ -35,7 +35,6 @@ class ApiDoc(object):
             self.url_path = '/apidoc'
 
         self.app = None
-        self.__project_data = None
 
         if app:
             self.init_app(app)
@@ -47,12 +46,11 @@ class ApiDoc(object):
         if not self.url_path.endswith('/'):
             url += '/'
 
-        app.add_url_rule(url, 'apidoc', self.__view)
-        app.add_url_rule(url + '<path:path>', 'apidoc', self.__view)
+        app.add_url_rule(url, 'apidoc', self.__send_static_file)
+        app.add_url_rule(url + '<path:path>', 'apidoc', self.__send_static_file)
 
-        self.__project_data = self.__load_project_info()
-
-    def __load_project_info(self):
+    @lru_cache()
+    def __get_project_info(self):
         file_name = join(self.app.static_folder, self.folder_path, 'api_project.json')
 
         with open(file_name, 'rt') as file:
@@ -60,7 +58,7 @@ class ApiDoc(object):
 
         return json.loads(data)
 
-    def __view(self, path=None):
+    def __send_static_file(self, path=None):
         if not path:
             path = 'index.html'
 
@@ -78,14 +76,15 @@ class ApiDoc(object):
         with open(file_name, 'rt') as file:
             data = file.read()
 
-        self.__project_data.get('url').find('')
+        project_info = self.__get_project_info()
+        url = project_info.get('url')
 
-        data = self.__replace_api_url(data, self.__project_data.get('url'))
+        data = self.__replace_url(data, url, request.url_root)
 
-        url = self.__project_data.get('sampleUrl')
+        url = project_info.get('sampleUrl')
 
         if isinstance(url, str):
-            data = self.__replace_api_url(data, self.__project_data.get('sampleUrl'))
+            data = self.__replace_url(data, url, request.url_root)
 
         headers = Headers()
         headers['Content-Length'] = getsize(file_name)
@@ -100,12 +99,12 @@ class ApiDoc(object):
         return response
 
     @staticmethod
-    def __replace_api_url(data, old_url):
+    def __replace_url(data, old_url, new_url):
         i = old_url.find('/', 8)
 
         if i > -1:
             old_url = old_url[:i]
 
-        new_url = request.url_root.strip('/')
+        new_url = new_url.strip('/')
 
         return data.replace(old_url, new_url)
