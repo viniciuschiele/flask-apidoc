@@ -30,7 +30,7 @@ Please use the Issues_ for feature requests and troubleshooting usage.
 
 .. _ApiDoc: http://www.apidocjs.com
 
-.. _examples: https://github.com/viniciuschiele/flask-apidoc/tree/master/examples
+.. _example: https://github.com/viniciuschiele/flask-apidoc/tree/master/example
 
 .. _PyPi: https://pypi.python.org/pypi/flask-apidoc
 
