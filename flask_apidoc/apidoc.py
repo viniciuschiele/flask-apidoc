@@ -46,8 +46,8 @@ class ApiDoc(object):
         if not self.url_path.endswith('/'):
             url += '/'
 
-        app.add_url_rule(url, 'docs', self.__send_static_file)
-        app.add_url_rule(url + '<path:path>', 'docs', self.__send_static_file)
+        app.add_url_rule(url, 'docs', self.__send_static_file, strict_slashes=True)
+        app.add_url_rule(url + '<path:path>', 'docs', self.__send_static_file, strict_slashes=True)
 
     @lru_cache()
     def __get_project_info(self):
