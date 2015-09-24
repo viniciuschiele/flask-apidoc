@@ -41,6 +41,7 @@ class ApiDoc(object):
 
     def init_app(self, app):
         self.app = app
+
         url = self.url_path
 
         if not self.url_path.endswith('/'):
@@ -77,14 +78,8 @@ class ApiDoc(object):
             data = file.read()
 
         project_info = self.__get_project_info()
-        url = project_info.get('url')
 
-        data = self.__replace_url(data, url, request.url_root)
-
-        url = project_info.get('sampleUrl')
-
-        if isinstance(url, str):
-            data = self.__replace_url(data, url, request.url_root)
+        data = self.__replace_url(data, project_info.get('url'), request.url_root)
 
         headers = Headers()
         headers['Content-Length'] = getsize(file_name)
@@ -100,11 +95,5 @@ class ApiDoc(object):
 
     @staticmethod
     def __replace_url(data, old_url, new_url):
-        i = old_url.find('/', 8)
-
-        if i > -1:
-            old_url = old_url[:i]
-
         new_url = new_url.strip('/')
-
         return data.replace(old_url, new_url)
