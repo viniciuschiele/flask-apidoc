@@ -5,9 +5,14 @@ Flask ApiDoc is a Flask extension which adds support for the ApiDoc_.
 
 |Version|
 
+Features
+===============
+- Flask-Script command to generate the apidoc's files, by default they are generated into static/docs
+- Hosts the apidoc's files, by default they are hosted in http://localhost:5000/docs
+
 Documentation
 ===============
-Soon... take a look at the examples_ to see how it works.
+Soon... take a look at the example_ to see how it works.
 
 Installation
 ===============
