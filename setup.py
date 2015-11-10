@@ -2,14 +2,14 @@ from setuptools import setup
 
 setup(
     name='flask-apidoc',
-    version='0.7.0',
+    version='0.7.1',
     packages=['flask_apidoc'],
     url='https://github.com/viniciuschiele/flask-apidoc',
     license='Apache 2.0',
     author='Vinicius Chiele',
     author_email='vinicius.chiele@gmail.com',
     description='Adds ApiDoc support to Flask',
-    keywords=['flask', 'apidoc', 'rest', 'restful'],
+    keywords=['flask', 'apidoc', 'doc', 'documentation', 'rest', 'restful'],
     install_requires=['flask>=0.10.1'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
