@@ -76,15 +76,15 @@ class ApiDoc(object):
 
         file_name = join(self.folder_path, path)
 
-        # Both api_project.js and api_data.js have the absolute url
+        # the api_project.js has the absolute url
         # hard coded so we replace them by the current url.
-        if path == 'api_project.js' or path == 'api_data.js':
+        if path == 'api_project.js':
             return self.__send_api_file(file_name)
 
         # Any other apidoc file is treated as a normal static file
         return self.app.send_static_file(file_name)
 
-    @lru_cache(maxsize=None, typed=True)
+    @lru_cache(maxsize=None)
     def __send_api_file(self, file_name):
         """
         Sends apidoc files from the apidoc folder to the browser.
