@@ -25,6 +25,10 @@ from flask_script import Command
 
 
 class GenerateApiDoc(Command):
+    """
+    GenerateApiDoc adds to Flask-Script a command to generate the apidoc files.
+    """
+
     def __init__(self, input_path=None, output_path=None, template_path=None):
         super().__init__()
         self.input_path = input_path
