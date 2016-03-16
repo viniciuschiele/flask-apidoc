@@ -24,14 +24,8 @@ Feedback
 ===============
 Please use the Issues_ for feature requests and troubleshooting usage.
 
-.. |Version| image:: https://badge.fury.io/py/flask-apscheduler.svg?
+.. |Version| image:: https://badge.fury.io/py/flask-apidoc.svg
    :target: http://badge.fury.io/py/flask-apidoc
-
-.. |Downloads| image:: https://pypip.in/d/flask-apscheduler/badge.svg?
-   :target: https://pypi.python.org/pypi/flask-apidoc
-   
-.. |License| image:: https://pypip.in/license/flask-apscheduler/badge.svg?
-   :target: https://github.com/viniciuschiele/flask-apidoc/blob/master/LICENSE
 
 .. _ApiDoc: http://www.apidocjs.com
 
