@@ -30,7 +30,7 @@ class GenerateApiDoc(Command):
     """
 
     def __init__(self, input_path=None, output_path=None, template_path=None):
-        super().__init__()
+        super(Command, self).__init__()
         self.input_path = input_path
         self.output_path = output_path or 'static/docs'
         self.template_path = template_path

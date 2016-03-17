@@ -16,7 +16,7 @@ import json
 import mimetypes
 
 from flask import request
-from functools import lru_cache
+from functools32 import lru_cache
 from os.path import join, getmtime, getsize
 from werkzeug.datastructures import Headers
 
