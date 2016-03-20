@@ -1,4 +1,4 @@
-from example.views import app
+from views import app
 from flask_apidoc.commands import GenerateApiDoc
 from flask_script import Manager
 
