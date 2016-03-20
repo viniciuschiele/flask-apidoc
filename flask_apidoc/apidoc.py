@@ -16,9 +16,9 @@ import json
 import mimetypes
 
 from flask import request
-from functools32 import lru_cache
 from os.path import join, getmtime, getsize
 from werkzeug.datastructures import Headers
+from .utils import cached
 
 
 class ApiDoc(object):
@@ -84,7 +84,7 @@ class ApiDoc(object):
         # Any other apidoc file is treated as a normal static file
         return self.app.send_static_file(file_name)
 
-    @lru_cache(maxsize=None)
+    @cached
     def __send_api_file(self, file_name):
         """
         Sends apidoc files from the apidoc folder to the browser.
@@ -121,7 +121,7 @@ class ApiDoc(object):
 
         return response
 
-    @lru_cache(maxsize=None)
+    @cached
     def __read_api_project(self):
         """
         Reads the api_project.json file from apidoc folder as a json string.
