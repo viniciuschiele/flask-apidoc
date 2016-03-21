@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='flask-apidoc',
-    version='0.7.2',
+    version='1.0.0',
     packages=['flask_apidoc'],
     url='https://github.com/viniciuschiele/flask-apidoc',
     license='MIT',
