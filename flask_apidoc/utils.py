@@ -2,6 +2,8 @@
 Helpers.
 """
 
+import functools
+
 
 def cached(f):
     """
@@ -9,15 +11,13 @@ def cached(f):
     :param f: The function to be cached.
     :return: The cached value.
     """
-    class CachedDict(dict):
-        def __init__(self, f):
-            self.f = f
 
-        def __call__(self, *args):
-            return self[args]
+    cache = f.cache = {}
 
-        def __missing__(self, key):
-            ret = self[key] = self.f(*key)
-            return ret
-
-    return CachedDict(f)
+    @functools.wraps(f)
+    def decorator(*args, **kwargs):
+        key = str(args) + str(kwargs)
+        if key not in cache:
+            cache[key] = f(*args, **kwargs)
+        return cache[key]
+    return decorator
