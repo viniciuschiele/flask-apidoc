@@ -5,7 +5,7 @@ setup(
     version='0.7.2',
     packages=['flask_apidoc'],
     url='https://github.com/viniciuschiele/flask-apidoc',
-    license='Apache 2.0',
+    license='MIT',
     author='Vinicius Chiele',
     author_email='vinicius.chiele@gmail.com',
     description='Adds ApiDoc support to Flask',
