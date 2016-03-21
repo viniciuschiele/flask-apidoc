@@ -26,13 +26,14 @@ class ApiDoc(object):
     ApiDoc hosts the apidoc files in a specified url.
     """
 
-    def __init__(self, folder_path=None, url_path=None, app=None):
+    def __init__(self, folder_path=None, url_path=None, dynamic_url=True, app=None):
         """
         Initializes a new instance of ApiDoc.
 
-        :param folder_path: the folder with apidoc files. Defaults to the 'docs' folder in the flask static folder.
-        :param url_path: the url path for the apidoc files. Defaults to the '/docs'.
-        :param app: the flask application.
+        :param folder_path: The folder with apidoc files. Defaults to the 'docs' folder in the flask static folder.
+        :param url_path: The url path for the apidoc files. Defaults to the '/docs'.
+        :param dynamic_url: Set `True` to replace all the urls in ApiDoc files by the current url.
+        :param app: The flask application.
         """
 
         self.folder_path = folder_path
@@ -43,6 +44,8 @@ class ApiDoc(object):
 
         if self.url_path is None:
             self.url_path = '/docs'
+
+        self.dynamic_url = dynamic_url
 
         self.app = None
 
@@ -78,7 +81,7 @@ class ApiDoc(object):
 
         # the api_project.js has the absolute url
         # hard coded so we replace them by the current url.
-        if path == 'api_project.js':
+        if self.dynamic_url and path == 'api_project.js':
             return self.__send_api_file(file_name)
 
         # Any other apidoc file is treated as a normal static file
