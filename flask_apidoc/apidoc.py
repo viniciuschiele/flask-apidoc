@@ -92,7 +92,7 @@ class ApiDoc(object):
         api_project = self.__read_api_project()
 
         new_url = request.url_root.strip('/')
-        old_url = api_project.get('url')
+        old_url = api_project.get('generator').get('url')
         data = data.replace(old_url, new_url)
 
         # creates a flask response to send
