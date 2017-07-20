@@ -32,6 +32,7 @@ class ApiDoc(object):
             self.url_path = '/docs'
 
         self.dynamic_url = dynamic_url
+        self.allow_absolute_url = True
 
         self.app = None
 
@@ -46,6 +47,9 @@ class ApiDoc(object):
 
         self.app = app
 
+        self.dynamic_url = self.app.config.get('APIDOC_DYNAMIC_URL', self.dynamic_url)
+        self.allow_absolute_url = self.app.config.get('APIDOC_ALLOW_ABSOLUTE_URL', self.allow_absolute_url)
+
         url = self.url_path
 
         if not self.url_path.endswith('/'):
@@ -56,8 +60,8 @@ class ApiDoc(object):
 
     def __send_static_file(self, path=None):
         """
-        Sends apidoc files from the apidoc folder to the browser.
-        :param path: the apidoc file
+        Send apidoc files from the apidoc folder to the browser.
+        :param path: the apidoc file.
         """
 
         if not path:
@@ -70,16 +74,19 @@ class ApiDoc(object):
         if self.dynamic_url and path == 'api_project.js':
             return self.__send_api_file(file_name)
 
+        if self.allow_absolute_url and path == 'main.js':
+            return self.__send_main_file(file_name)
+
         # Any other apidoc file is treated as a normal static file
         return self.app.send_static_file(file_name)
 
     @cached
     def __send_api_file(self, file_name):
         """
-        Sends apidoc files from the apidoc folder to the browser.
+        Send apidoc files from the apidoc folder to the browser.
         This method replaces all absolute urls in the file by
         the current url.
-        :param file_name: the apidoc file
+        :param file_name: the apidoc file.
         """
 
         file_name = join(self.app.static_folder, file_name)
@@ -97,6 +104,37 @@ class ApiDoc(object):
 
         # creates a flask response to send
         # the file to the browser
+
+        headers = Headers()
+        headers['Content-Length'] = getsize(file_name)
+
+        response = self.app.response_class(data,
+                                           mimetype=mimetypes.guess_type(file_name)[0],
+                                           headers=headers,
+                                           direct_passthrough=True)
+
+        response.last_modified = int(getmtime(file_name))
+
+        return response
+
+    @cached
+    def __send_main_file(self, file_name):
+        """
+        Send apidoc files from the apidoc folder to the browser.
+        This method replaces all absolute urls in the file by
+        the current url.
+        :param file_name: the apidoc file.
+        """
+
+        file_name = join(self.app.static_folder, file_name)
+
+        with open(file_name, 'rt') as file:
+            data = file.read()
+
+        data = data.replace(
+            'fields.article.url = apiProject.url + fields.article.url;',
+            '''if (fields.article.url.substr(0, 4).toLowerCase() !== \'http\')
+                        fields.article.url = apiProject.url + fields.article.url;''')
 
         headers = Headers()
         headers['Content-Length'] = getsize(file_name)
