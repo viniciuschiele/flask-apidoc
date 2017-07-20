@@ -1,3 +1,4 @@
+import codecs
 import json
 import mimetypes
 
@@ -91,7 +92,7 @@ class ApiDoc(object):
 
         file_name = join(self.app.static_folder, file_name)
 
-        with open(file_name, 'rt') as file:
+        with codecs.open(file_name, 'r', 'utf-8') as file:
             data = file.read()
 
         # replaces the hard coded url by the
@@ -128,7 +129,7 @@ class ApiDoc(object):
 
         file_name = join(self.app.static_folder, file_name)
 
-        with open(file_name, 'rt') as file:
+        with codecs.open(file_name, 'r', 'utf-8') as file:
             data = file.read()
 
         data = data.replace(
