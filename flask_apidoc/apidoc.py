@@ -95,13 +95,15 @@ class ApiDoc(object):
         with codecs.open(file_name, 'r', 'utf-8') as file:
             data = file.read()
 
-        # replaces the hard coded url by the
-        # current url.
+        # replaces the hard coded url by the current url.
         api_project = self.__read_api_project()
 
-        new_url = request.url_root.strip('/')
-        old_url = api_project.get('url', new_url)
-        data = data.replace(old_url, new_url)
+        old_url = api_project.get('url')
+
+        # replaces the project's url only if it is present in the file.
+        if old_url:
+            new_url = request.url_root.strip('/')
+            data = data.replace(old_url, new_url)
 
         # creates a flask response to send
         # the file to the browser
