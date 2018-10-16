@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+1.2.0
+++++++++++++++++++
+- Send to STDOUT the output from apidoc #12.
+
 1.1.2
 ++++++++++++++++++
 - Fix: apidoc.json without a url was raising an error.
