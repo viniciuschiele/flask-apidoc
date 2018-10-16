@@ -40,4 +40,8 @@ class GenerateApiDoc(Command):
             cmd.append('--template')
             cmd.append(self.template_path)
 
-        return subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        p = subprocess.Popen(cmd)
+
+        p.communicate()
+
+        return p.returncode
