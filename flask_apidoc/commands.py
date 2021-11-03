@@ -1,29 +1,20 @@
-"""
-Provides an integration with flask_script to generate the ApiDoc files.
-"""
-
-
-try:
-    import flask_script
-except ImportError:
-    raise ImportError('Missing flask-script library (pip install flask-script)')
-
-
 import subprocess
-
-from flask_script import Command
+from click import Command
 
 
 class GenerateApiDoc(Command):
     """
-    GenerateApiDoc adds to Flask-Script a command to generate the apidoc files.
+    GenerateApiDoc is a command to generate the apidoc files.
     """
-
-    def __init__(self, input_path=None, output_path=None, template_path=None):
-        super(GenerateApiDoc, self).__init__()
+    def __init__(self,
+                 input_path="./",
+                 output_path="static/docs",
+                 template_path=None):
+        super(GenerateApiDoc, self).__init__(name="GenerateApiDoc")
         self.input_path = input_path
-        self.output_path = output_path or 'static/docs'
+        self.output_path = output_path
         self.template_path = template_path
+        self.callback = self.run
 
     def run(self):
         cmd = ['apidoc']
