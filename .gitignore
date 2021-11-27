@@ -57,6 +57,9 @@ target/
   
 # PyCharm
 .idea/
+
+# vscode
+.vscode
   
 # OSX
 .DS_Store
