@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.3.0
+++++++++++++++++++
+- Add requirement for flask>=1.0.1
+- Replace flask_script with Flask's built-in CLI tool. Thanks :user:`olivetree123`.
+
 1.2.0
 ++++++++++++++++++
 - Send to STDOUT the output from apidoc #12.
